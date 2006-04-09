@@ -24,9 +24,11 @@ int main(int argc, char *argv[])
 	char curloutputname[PATH_MAX];
 	char binlinkname[PATH_MAX];
 	char cmd[PATH_MAX];
+	char argsname[PATH_MAX];
 	FILE *file;
 	int returncode;
 	int ch;
+	int i;
 
 	progname = argv[0];
 
@@ -42,6 +44,7 @@ int main(int argc, char *argv[])
 	snprintf(stderrname, PATH_MAX, "%s-stderr", nativebinname);
 	snprintf(curloutputname, PATH_MAX, "%s-curlout", nativebinname);
 	snprintf(binlinkname, PATH_MAX, "%s-cross,ff8", nativebinname);
+	snprintf(argsname, PATH_MAX, "%s-args", nativebinname);
 
 	unlink(stdoutname);
 	unlink(stderrname);
@@ -55,6 +58,14 @@ int main(int argc, char *argv[])
 	if (file == NULL) error("Can't open stdin file");
 	if (!isatty(fileno(stdin))) {
 		while ((ch = fgetc(stdin)) != EOF) fputc(ch, file);
+	}
+	fclose(file);
+
+	/* Dump command line args to file */
+	file = fopen(argsname, "w");
+	if (file == NULL) error("Can't open args file");
+	for (i = 1; i < argc; i++) {
+		fprintf(file, " %s", argv[i]);
 	}
 	fclose(file);
 

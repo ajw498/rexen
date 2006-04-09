@@ -29,10 +29,12 @@ int main(void)
 	char stdinname[PATH_MAX];
 	char stdoutname[PATH_MAX];
 	char stderrname[PATH_MAX];
+	char argsname[PATH_MAX];
 	char cmd[PATH_MAX];
 	char *rootdir;
 	char *localdir;
 	char *csd;
+	FILE *file;
 
 	printf("Content-Type: text/plain\n\n");
 
@@ -92,8 +94,14 @@ int main(void)
 	snprintf(stdoutname, PATH_MAX, "%s%s-stdout", csd, riscosfile);
 	snprintf(stderrname, PATH_MAX, "%s%s-stderr", csd, riscosfile);
 	snprintf(binname, PATH_MAX, "%s%s-cross", csd, riscosfile);
+	snprintf(argsname, PATH_MAX, "%s%s-args", csd, riscosfile);
 
-	snprintf(cmd, PATH_MAX, "Run %s < %s > %s 2> %s", binname, stdinname, stdoutname, stderrname);
+	file = fopen(argsname, "r");
+	if (file == NULL) error("Can't open args file");
+	if (fgets(argsname, PATH_MAX, file) == NULL) argsname[0] = '\0';
+	fclose(file);
+
+	snprintf(cmd, PATH_MAX, "Run %s %s < %s > %s 2> %s", binname, argsname, stdinname, stdoutname, stderrname);
 
 	_swix(Wimp_Initialise, _INR(0,3), 310, 0x4B534154, "rexen-cgi", 0);
 	_swix(Wimp_StartTask, _IN(0), cmd);
