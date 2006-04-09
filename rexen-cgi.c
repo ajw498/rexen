@@ -34,7 +34,7 @@ int main(void)
 	char *rootdir;
 	char *localdir;
 	char *csd;
-	FILE *file;
+	FILE *fileh;
 
 	printf("Content-Type: text/plain\n\n");
 
@@ -96,10 +96,10 @@ int main(void)
 	snprintf(binname, PATH_MAX, "%s%s-cross", csd, riscosfile);
 	snprintf(argsname, PATH_MAX, "%s%s-args", csd, riscosfile);
 
-	file = fopen(argsname, "r");
-	if (file == NULL) error("Can't open args file");
-	if (fgets(argsname, PATH_MAX, file) == NULL) argsname[0] = '\0';
-	fclose(file);
+	fileh = fopen(argsname, "r");
+	if (fileh == NULL) error("Can't open args file");
+	if (fgets(argsname, PATH_MAX, fileh) == NULL) argsname[0] = '\0';
+	fclose(fileh);
 
 	snprintf(cmd, PATH_MAX, "Run %s %s < %s > %s 2> %s", binname, argsname, stdinname, stdoutname, stderrname);
 
