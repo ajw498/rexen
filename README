@@ -1,0 +1,45 @@
+REXEN
+~~~~~
+REXEN is a remote execution environment which allows you to run cross compiled binaries on the target machine as if they were running natively on the host. This can be useful for running things like configure scripts that aren't very friendly towards cross compiling. It requires the host to be running a Linux kernel that has support for binfmt_misc.
+
+Licence
+~~~~~~~
+REXEN is Copyright 2003-2006 Alex Waugh
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Setup
+~~~~~
+On the RISC OS target machine:
+Install WebJames
+make to build the rexen-cgi binary
+Copy the rexen-cgi binary to WebJames' cgi-bin2 directory (or wherever else provided it can be run as a CGI script). Note that as this script can run arbitrary binaries, it is inherently insecure. Therefore you should ensure that a firewall is in place to prevent anyone else from accessing it.
+Set up a network filing system such as Sunfish or LanMan98 so that the target can access the host's filesystem.
+Set the REXEN$Remote system variable to the path on the remote host.
+Set the REXEN$Local system variable to the path on the local target.
+E.g.
+Set REXEN$Remote /home/cross
+Set REXEN$Local LanMan98::cross.$
+If the remote location is /home/xxx and you have a Sunfish mount named xxx in Sunfish:Mounts then this will be used as a default and you don't have to set the system variables.
+
+On the Linux host machine:
+make   to build the rexen binary
+su make setup   to register the binary with binfmt_misc
+set the REXEN_CGI environment variable to the URL to access the target machine
+export REXEN_CGI=http://172.16.0.2/cgi-bin2/rexen-cgi
+
+Use
+~~~
+On the host machine cross compile a program, then you can run it as if it were a native binary, and instead it will get run on the target machine, with any output copied back to the host. This will only work with command line programs.
