@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	/* Dump command line args to file */
 	file = fopen(argsname, "w");
 	if (file == NULL) error("Can't open args file");
-	for (i = 1; i < argc; i++) {
+	for (i = 2; i < argc; i++) {
 		fprintf(file, " %s", argv[i]);
 	}
 	fclose(file);
