@@ -80,8 +80,9 @@ int main(void)
 	dir += strlen(rootdir);
 	while (dir[0] == '/') dir++;
 	if (dir[0] != '\0') {
-		memcpy(cmd, dir, file - dir);
-		cmd[file - dir] = '\0';
+		strcpy(cmd, "./");
+		memcpy(cmd + 2, dir, file - dir);
+		cmd[(file - dir) + 2] = '\0';
 		__riscosify_std(cmd, 0, riscosfile, PATH_MAX, NULL);
 		if (chdir(riscosfile)) error("Cannot chdir");;
 	}
